@@ -6,25 +6,24 @@ import {
   Link,
   Redirect,
 } from 'react-router-dom'
-
-import Container from '@material-ui/core/Container'
-
 import './App.css'
+
 import Summary from './pages/summary/Summary'
 import Home from './pages/home/Home'
 import Detailed from './pages/detailed/Detailed'
 import Header from './Header'
+import list from './MenuItems'
+
+import Container from '@material-ui/core/Container'
 import { makeStyles } from '@material-ui/core/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import Drawer from '@material-ui/core/Drawer'
-import Divider from '@material-ui/core/Divider'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
-import InboxIcon from '@material-ui/icons/MoveToInbox'
 import Toolbar from '@material-ui/core/Toolbar'
-import { Button } from '@material-ui/core'
+import Icon from '@material-ui/core/Icon'
 
 const drawerWidth = 240
 
@@ -44,12 +43,16 @@ const useStyles = makeStyles((theme) => ({
   },
   content: {
     flexGrow: 1,
+    marginLeft: drawerWidth,
     padding: theme.spacing(3),
   },
 }))
 
 function App() {
   const classes = useStyles()
+
+  const links = list
+
   return (
     <div>
       <CssBaseline />
@@ -65,23 +68,17 @@ function App() {
           <Toolbar />
           <div className={classes.drawerContainer}>
             <List>
-              {['Home', 'Summary', 'Detailed', 'Drafts'].map((text, index) => (
-                <ListItem button key={text} component={Link} to={`/${text}`}>
+              {links.map((link, index) => (
+                <ListItem
+                  button
+                  key={link.title}
+                  component={Link}
+                  to={link.path}
+                >
                   <ListItemIcon>
-                    <InboxIcon />
+                    <Icon>{link.icon}</Icon>
                   </ListItemIcon>
-                  <ListItemText primary={text} />
-                </ListItem>
-              ))}
-            </List>
-            <Divider />
-            <List>
-              {['Trash'].map((text, index) => (
-                <ListItem button key={text}>
-                  <ListItemIcon>
-                    <InboxIcon />
-                  </ListItemIcon>
-                  <ListItemText primary={text} />
+                  <ListItemText primary={link.title} />
                 </ListItem>
               ))}
             </List>
@@ -90,12 +87,12 @@ function App() {
 
         <main className={classes.content}>
           <Toolbar />
-          <Container maxWidth="md">
+          <Container>
             <Switch>
               <Route exact path="/">
                 <Home />
               </Route>
-              <Route exact path="/summary">
+              <Route path="/summary">
                 <Summary />
               </Route>
               <Route path="/detailed">
