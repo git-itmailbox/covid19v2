@@ -16,7 +16,7 @@ function Detailed() {
   useEffect(() => {
     covidApi
       .get('/total/country/' + countryCode)
-      .then((res) => setCountryData(res.data))
+      .then((res) => setCountryData(prepareData(res.data)))
   }, [countryCode])
 
   function handleChange(e) {
@@ -37,9 +37,27 @@ function Detailed() {
           </MenuItem>
         ))}
       </Select>
-      <Chart />
+      {countryData ? <Chart data={countryData} /> : null}
     </div>
   )
 }
 
 export default Detailed
+
+function prepareData(data) {
+  const chartData = {
+    labels: [],
+    active: [],
+    deaths: [],
+    recovered: [],
+  }
+
+  data.forEach((element) => {
+    chartData.labels.push(element.Date.replace(/T.*/, ''))
+    chartData.active.push(element.Active)
+    chartData.deaths.push(element.Deaths)
+    chartData.recovered.push(element.Recovered)
+  })
+
+  return chartData
+}
