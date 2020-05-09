@@ -4,7 +4,7 @@ import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
 
 function GlobalDataBlock({
-  data: { TotalConfirmed, TotalDeath, TotalRecovered },
+  data: { TotalConfirmed, TotalDeaths, TotalRecovered },
 }) {
   return (
     <Paper style={infoBlockStyle}>
@@ -16,7 +16,7 @@ function GlobalDataBlock({
           <Typography variant="h6">Confirmed : {TotalConfirmed}</Typography>
         </Grid>
         <Grid item xs={3}>
-          <Typography variant="h6">Death: {TotalDeath}</Typography>
+          <Typography variant="h6">Death: {TotalDeaths}</Typography>
         </Grid>
         <Grid item xs={3}>
           <Typography variant="h6">Recovered : {TotalRecovered}</Typography>
