@@ -1,7 +1,13 @@
 import React from 'react'
-import { Line } from 'react-chartjs-2'
+import { Line, Bar, HorizontalBar, Polar } from 'react-chartjs-2'
+import {
+  CHART_TYPE_LINE,
+  CHART_TYPE_BAR,
+  CHART_TYPE_POLAR,
+  CHART_TYPE_HORIZONTAL_BAR,
+} from './chartTypes'
 
-function Chart({ data: { labels, active, deaths, recovered } }) {
+function Chart({ data: { labels, active, deaths, recovered }, type }) {
   const data = {
     labels,
     datasets: [
@@ -35,10 +41,24 @@ function Chart({ data: { labels, active, deaths, recovered } }) {
     ],
   }
 
+  function getChartByType(type) {
+    switch (type) {
+      case CHART_TYPE_BAR:
+        return <Bar data={data} />
+      case CHART_TYPE_HORIZONTAL_BAR:
+        return <HorizontalBar data={data} />
+      case CHART_TYPE_POLAR:
+        return <Polar data={data} />
+      case CHART_TYPE_LINE:
+      default:
+        return <Line data={data} />
+    }
+  }
+
   return (
     <div>
       <h2>Line Example</h2>
-      <Line data={data} />
+      {getChartByType(type)}
     </div>
   )
 }

@@ -3,11 +3,13 @@ import covidApi from '../../api/covidApi'
 import Chart from './Chart'
 import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
+import { CHART_TYPE_BAR, CHART_TYPE_LINE, ALL_TYPES } from './chartTypes'
 
 function Detailed() {
   const [countries, setCountries] = useState([])
   const [countryCode, setCountryCode] = useState('ukraine')
   const [countryData, setCountryData] = useState(null)
+  const [chartType, setChartType] = useState(CHART_TYPE_LINE)
 
   useEffect(() => {
     covidApi.get('/countries').then((res) => setCountries(res.data))
@@ -19,17 +21,21 @@ function Detailed() {
       .then((res) => setCountryData(prepareData(res.data)))
   }, [countryCode])
 
-  function handleChange(e) {
+  function handleChangeCountry(e) {
     setCountryCode(e.target.value)
+  }
+
+  function handleChangeTypeChart(e) {
+    setChartType(e.target.value)
   }
 
   return (
     <div>
       <Select
-        labelId="demo-simple-select-label"
-        id="demo-simple-select"
+        labelId="country-select-label"
+        id="country-select"
         value={countryCode}
-        onChange={handleChange}
+        onChange={handleChangeCountry}
       >
         {countries.map((country) => (
           <MenuItem value={country.Slug} key={country.Slug}>
@@ -37,7 +43,20 @@ function Detailed() {
           </MenuItem>
         ))}
       </Select>
-      {countryData ? <Chart data={countryData} /> : null}
+      <Select
+        labelId="chart-type-select-label"
+        id="chart-type-select"
+        value={chartType}
+        autoWidth
+        onChange={handleChangeTypeChart}
+      >
+        {ALL_TYPES.map((type) => (
+          <MenuItem value={type} key={type}>
+            {type}
+          </MenuItem>
+        ))}
+      </Select>
+      {countryData ? <Chart data={countryData} type={chartType} /> : null}
     </div>
   )
 }
