@@ -2,10 +2,25 @@ import React, { useEffect, useState } from 'react'
 import covidApi from '../../api/covidApi'
 import Chart from './Chart'
 import Select from '@material-ui/core/Select'
+import FormControl from '@material-ui/core/FormControl'
+import InputLabel from '@material-ui/core/InputLabel'
 import MenuItem from '@material-ui/core/MenuItem'
-import { CHART_TYPE_BAR, CHART_TYPE_LINE, ALL_TYPES } from './chartTypes'
+import Grid from '@material-ui/core/Grid'
+import { CHART_TYPE_LINE, ALL_TYPES } from './chartTypes'
+import { makeStyles } from '@material-ui/core/styles'
+
+const useStyles = makeStyles((theme) => ({
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+  },
+  selectEmpty: {
+    marginTop: theme.spacing(2),
+  },
+}))
 
 function Detailed() {
+  const classes = useStyles()
   const [countries, setCountries] = useState([])
   const [countryCode, setCountryCode] = useState('ukraine')
   const [countryData, setCountryData] = useState(null)
@@ -42,31 +57,48 @@ function Detailed() {
 
   return (
     <div>
-      <Select
-        labelId="country-select-label"
-        id="country-select"
-        value={countryCode}
-        onChange={handleChangeCountry}
+      <Grid
+        container
+        direction="row"
+        justify="space-around"
+        alignItems="center"
       >
-        {countries.map((country) => (
-          <MenuItem value={country.Slug} key={country.Slug}>
-            {country.Country}
-          </MenuItem>
-        ))}
-      </Select>
-      <Select
-        labelId="chart-type-select-label"
-        id="chart-type-select"
-        value={chartType}
-        autoWidth
-        onChange={handleChangeTypeChart}
-      >
-        {ALL_TYPES.map((type) => (
-          <MenuItem value={type} key={type}>
-            {type}
-          </MenuItem>
-        ))}
-      </Select>
+        <Grid item>
+          <FormControl className={classes.formControl}>
+            <InputLabel id="country-select-label">Country</InputLabel>
+            <Select
+              labelId="country-select-label"
+              id="country-select"
+              value={countryCode}
+              onChange={handleChangeCountry}
+            >
+              {countries.map((country) => (
+                <MenuItem value={country.Slug} key={country.Slug}>
+                  {country.Country}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
+        <Grid item>
+          <FormControl className={classes.formControl}>
+            <InputLabel id="country-select-label">Chart type</InputLabel>
+            <Select
+              labelId="chart-type-select-label"
+              id="chart-type-select"
+              value={chartType}
+              autoWidth
+              onChange={handleChangeTypeChart}
+            >
+              {ALL_TYPES.map((type) => (
+                <MenuItem value={type} key={type}>
+                  {type}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
+      </Grid>
       {countryData ? <Chart data={countryData} type={chartType} /> : null}
     </div>
   )
