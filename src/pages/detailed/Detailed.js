@@ -12,7 +12,10 @@ function Detailed() {
   const [chartType, setChartType] = useState(CHART_TYPE_LINE)
 
   useEffect(() => {
-    covidApi.get('/countries').then((res) => setCountries(res.data))
+    covidApi
+      .get('/countries')
+      .then((res) => res.data.sort(sortByCountry))
+      .then((data) => setCountries(data))
   }, [])
 
   useEffect(() => {
@@ -20,6 +23,14 @@ function Detailed() {
       .get('/total/country/' + countryCode)
       .then((res) => setCountryData(prepareData(res.data)))
   }, [countryCode])
+
+  function sortByCountry(countryA, countryB) {
+    return countryA.Country > countryB.Country
+      ? 1
+      : countryB.Country > countryA.Country
+      ? -1
+      : 0
+  }
 
   function handleChangeCountry(e) {
     setCountryCode(e.target.value)
